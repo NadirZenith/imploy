@@ -16,24 +16,14 @@ class DeployController extends Controller implements SecureControllerInterface
      */
     public function postAction(Request $request)
     {
-        $dir = $this->getParameter('kernel.root_dir') . '/../web/';
-        $filename = 'test.html';
-        $file = $dir . $filename;
 
-        ob_start();
-        d($request->headers->all());
+        $X_HUB_SIGNATURE = $request->headers->get('x-hub-signature');
+        $CONTENT_TYPE = $request->headers->get('content-type');
+        $X_GITHUB_EVENT = $request->headers->get('x-github-event');
 
-        $HTTP_X_HUB_SIGNATURE = $request->headers->get('HTTP_X_HUB_SIGNATURE');
-        $HTTP_CONTENT_TYPE = $request->headers->get('HTTP_CONTENT_TYPE');
-        $HTTP_X_GITHUB_EVENT = $request->headers->get('HTTP_X_GITHUB_EVENT');
-        d($HTTP_X_HUB_SIGNATURE, $HTTP_CONTENT_TYPE, $HTTP_X_GITHUB_EVENT);
+        $this->log(array($X_HUB_SIGNATURE, $CONTENT_TYPE, $X_GITHUB_EVENT));
 
-        d($request->getContent());
-
-        $content = ob_get_clean();
-        file_put_contents($file, $content, FILE_APPEND | LOCK_EX);
-
-        return new Response('working');
+        return new Response('working ...');
     }
 
     /**
@@ -44,6 +34,21 @@ class DeployController extends Controller implements SecureControllerInterface
 
         return $this->render('AppBundle:DeployController:main.html.twig', array(// ...
         ));
+    }
+
+    private function log($content)
+    {
+
+        $dir = $this->getParameter('kernel.root_dir') . '/../web/';
+        $filename = 'log.html';
+        $file = $dir . $filename;
+
+        ob_start();
+        d($content);
+        $log = ob_get_clean();
+
+        file_put_contents($file, $log, FILE_APPEND | LOCK_EX);
+
     }
 
 }
