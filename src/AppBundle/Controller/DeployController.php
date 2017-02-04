@@ -18,7 +18,7 @@ class DeployController extends Controller
 	$file = $dir . $filename;
 
 	ob_start();	
-	d($request);
+	d($request->getContent());
 	$content = ob_get_clean();
 
 	file_put_contents($file, $content, FILE_APPEND | LOCK_EX);
