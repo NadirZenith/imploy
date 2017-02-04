@@ -17,11 +17,11 @@ class DeployController extends Controller implements SecureControllerInterface
     public function postAction(Request $request)
     {
 
-        $X_HUB_SIGNATURE = $request->headers->get('x-hub-signature');
         $CONTENT_TYPE = $request->headers->get('content-type');
+        $X_HUB_SIGNATURE = $request->headers->get('x-hub-signature');
         $X_GITHUB_EVENT = $request->headers->get('x-github-event');
 
-        $this->log(array($X_HUB_SIGNATURE, $CONTENT_TYPE, $X_GITHUB_EVENT));
+        $this->log(array($X_HUB_SIGNATURE, $CONTENT_TYPE, $X_GITHUB_EVENT, $request->getContent()));
 
         return new Response('working ...');
     }
@@ -36,7 +36,7 @@ class DeployController extends Controller implements SecureControllerInterface
         ));
     }
 
-    private function log($content)
+    private function log($log)
     {
 
         $dir = $this->getParameter('kernel.root_dir') . '/../web/';
@@ -44,10 +44,11 @@ class DeployController extends Controller implements SecureControllerInterface
         $file = $dir . $filename;
 
         ob_start();
-        d($content);
-        $log = ob_get_clean();
+        echo date('d/m/y m:i:s');
+        d($log);
+        $content = ob_get_clean();
 
-        file_put_contents($file, $log, FILE_APPEND | LOCK_EX);
+        file_put_contents($file, $content, FILE_APPEND | LOCK_EX);
 
     }
 
