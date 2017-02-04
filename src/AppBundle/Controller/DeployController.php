@@ -44,7 +44,7 @@ class DeployController extends Controller implements SecureControllerInterface
         $file = $dir . $filename;
 
         ob_start();
-        echo date('d/m/y m:i:s');
+        echo date('d/m/y H:i:s');
         d($log);
         $content = ob_get_clean();
 
