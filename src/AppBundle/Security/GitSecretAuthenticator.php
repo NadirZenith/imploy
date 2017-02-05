@@ -72,7 +72,6 @@ class GitSecretAuthenticator implements SimplePreAuthenticatorInterface, Authent
 
         $user = $userProvider->loadUserByEmail($token->getUser());
         if (!$user) {
-            dd('no user');
             // CAUTION: this message will be returned to the client
             // (so don't put any un-trusted messages / error strings here)
             throw new CustomUserMessageAuthenticationException(
