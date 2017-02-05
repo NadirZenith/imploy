@@ -19,7 +19,7 @@ class GitListener
         }
 
         $request = $event->getRequest();
-        d($request->headers->all());
+        dd($request->headers->all());
         $HTTP_X_HUB_SIGNATURE = $request->headers->get('HTTP_X_HUB_SIGNATURE');
         $HTTP_CONTENT_TYPE = $request->headers->get('HTTP_CONTENT_TYPE');
         $HTTP_X_GITHUB_EVENT = $request->headers->get('HTTP_X_GITHUB_EVENT');

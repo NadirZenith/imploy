@@ -11,17 +11,35 @@ use Symfony\Component\HttpFoundation\Response;
 class DeployController extends Controller implements SecureControllerInterface
 {
     /**
-     * @Route("/")
+     * @Route("/payload")
      * @Method("POST")
      */
-    public function postAction(Request $request)
+    public function postAction($githubPayload, Request $request)
     {
 
-        $CONTENT_TYPE = $request->headers->get('content-type');
-        $X_HUB_SIGNATURE = $request->headers->get('x-hub-signature');
-        $X_GITHUB_EVENT = $request->headers->get('x-github-event');
+//        d($this->isGranted('ROLE_SUPER_ADMIN'), $this->getUser());
+//        dd($request, $githubPayload);
 
-        $this->log(array($X_HUB_SIGNATURE, $CONTENT_TYPE, $X_GITHUB_EVENT, $request->getContent()));
+        switch ($request->headers->get('content-type')) {
+            case 'application/json':
+                $json = $request->getContent();
+                break;
+
+            case 'application/x-www-form-urlencoded':
+                $json = $request->request->get('payload');
+            default:
+                throw new \Exception(sprintf("Unsupported content type: '%s'", $request->headers->get('content-type')));
+                break;
+        }
+
+
+
+        $this->log(array(
+            $request->headers->get('content-type'),
+            $request->headers->get('x-github-event'),
+            $request->headers->get('x-hub-signature'),
+            $request->getContent()
+        ));
 
         return new Response('working ...');
     }

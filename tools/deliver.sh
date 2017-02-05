@@ -17,10 +17,10 @@ else
 fi
 
 env="dev"
-if [[ "$branch" == "master" ]]
-then
-    env="prod"
-fi
+#if [[ "$branch" == "master" ]]
+#then
+#    env="prod"
+#fi
 
 server_alias='nzlabes'
 base_dir='/srv/imploy'

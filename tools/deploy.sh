@@ -106,8 +106,8 @@ then
     export SYMFONY_ENV=dev
     bin/composer install
 
-#    display_success 'Upgrade database'
-#    bin/php app/console doctrine:schema:update --dump-sql --force
+    display_success 'Upgrade database'
+    bin/php bin/console doctrine:schema:update --dump-sql --force
 
 #    display_success 'Generate ASSETS'
 #    bin/node node_modules/.bin/grunt --force default

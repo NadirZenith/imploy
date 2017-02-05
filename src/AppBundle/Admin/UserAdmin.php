@@ -1,0 +1,111 @@
+<?php
+
+namespace AppBundle\Admin;
+
+use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Show\ShowMapper;
+
+class UserAdmin extends AbstractAdmin
+{
+    /**
+     * @param DatagridMapper $datagridMapper
+     */
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
+        $datagridMapper
+            ->add('username')
+            ->add('usernameCanonical')
+            ->add('email')
+            ->add('emailCanonical')
+            ->add('enabled')
+            ->add('salt')
+            ->add('password')
+            ->add('lastLogin')
+            ->add('confirmationToken')
+            ->add('passwordRequestedAt')
+            ->add('roles')
+            ->add('id')
+            ->add('createdOn')
+            ->add('locale')
+        ;
+    }
+
+    /**
+     * @param ListMapper $listMapper
+     */
+    protected function configureListFields(ListMapper $listMapper)
+    {
+        $listMapper
+            ->add('username')
+            ->add('usernameCanonical')
+            ->add('email')
+            ->add('emailCanonical')
+            ->add('enabled')
+            ->add('salt')
+            ->add('password')
+            ->add('lastLogin')
+            ->add('confirmationToken')
+            ->add('passwordRequestedAt')
+            ->add('roles')
+            ->add('id')
+            ->add('createdOn')
+            ->add('locale')
+            ->add('_action', null, array(
+                'actions' => array(
+                    'show' => array(),
+                    'edit' => array(),
+                    'delete' => array(),
+                )
+            ))
+        ;
+    }
+
+    /**
+     * @param FormMapper $formMapper
+     */
+    protected function configureFormFields(FormMapper $formMapper)
+    {
+        $formMapper
+            ->add('username')
+            ->add('usernameCanonical')
+            ->add('email')
+            ->add('emailCanonical')
+            ->add('enabled')
+            ->add('salt')
+            ->add('password')
+            ->add('lastLogin', 'sonata_type_datetime_picker')
+            ->add('confirmationToken')
+            ->add('passwordRequestedAt', 'sonata_type_datetime_picker')
+//            ->add('roles')
+//            ->add('id')
+            ->add('createdOn', 'sonata_type_datetime_picker')
+            ->add('locale')
+        ;
+    }
+
+    /**
+     * @param ShowMapper $showMapper
+     */
+    protected function configureShowFields(ShowMapper $showMapper)
+    {
+        $showMapper
+            ->add('username')
+            ->add('usernameCanonical')
+            ->add('email')
+            ->add('emailCanonical')
+            ->add('enabled')
+            ->add('salt')
+            ->add('password')
+            ->add('lastLogin')
+            ->add('confirmationToken')
+            ->add('passwordRequestedAt')
+            ->add('roles')
+            ->add('id')
+            ->add('createdOn')
+            ->add('locale')
+        ;
+    }
+}

@@ -3,6 +3,10 @@
 parameters:
 #    parameter_name: value
 
+
+imports:
+    - { resource: "@AppBundle/Resources/config/services.yml" }
+
 services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
@@ -12,3 +16,27 @@ services:
 #            arguments: ['%tokens%']
             tags:
                 - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    # git hub post authentication
+    gitsecret_user_provider:
+            class: AppBundle\Security\GitSecretUserProvider
+            arguments:
+                - '@app_user_repository'
+
+    gitsecret_authenticator:
+            class:  AppBundle\Security\GitSecretAuthenticator
+            public: false
+            arguments:
+                - '@app_pipeline_repository'
+
+    app_user_repository:
+            class: AppBundle\Repository\UserRepository
+            factory: ["@doctrine", getRepository]
+            arguments:
+                - 'AppBundle:User'
+
+    app_pipeline_repository:
+            class: AppBundle\Repository\PipelineRepository
+            factory: ["@doctrine", getRepository]
+            arguments:
+                - 'AppBundle:Pipeline'
