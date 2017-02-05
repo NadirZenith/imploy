@@ -24,11 +24,12 @@ class DeployController extends Controller implements SecureControllerInterface
         if ('pre' == $branch) {
 
             exec('cd /srv/nzlab.es/pre && /usr/bin/git pull origin pre 2>&1', $output);
-            $this->log("goto pre and do git pull", $output);
-//            echo implode('<br>', $output);
+            $this->log("goto pre and do git pull");
+            $this->log($output);
 
             exec('cd /srv/nzlab.es/pre && sh ./deploy/deploy.sh dev', $output);
-            $this->log("goto pre and deploy dev", $output);
+            $this->log("goto pre and deploy dev");
+            $this->log($output);
 
         }
 
