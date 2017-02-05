@@ -17,29 +17,45 @@ class DeployController extends Controller implements SecureControllerInterface
     public function postAction($githubPayload, Request $request)
     {
 
-//        d($this->isGranted('ROLE_SUPER_ADMIN'), $this->getUser());
+
+        $branch = basename($githubPayload->ref);
+        echo 'push ' . $branch;
 //        dd($request, $githubPayload);
+//        error_log('push ----------------------------------------- ' . $branch);
+        if ('pre' == $branch) {
 
-        switch ($request->headers->get('content-type')) {
-            case 'application/json':
-                $json = $request->getContent();
-                break;
+            echo "goto pre and do git pull <br>";
+            exec('cd /srv/nzlab.es/pre && /usr/bin/git pull origin pre 2>&1', $output);
+            echo implode('<br>', $output);
 
-            case 'application/x-www-form-urlencoded':
-                $json = $request->request->get('payload');
-            default:
-                throw new \Exception(sprintf("Unsupported content type: '%s'", $request->headers->get('content-type')));
-                break;
+            exec('cd /srv/nzlab.es/pre && sh ./deploy/deploy.sh dev', $output);
+            echo implode('<br>', $output);
+            //$result = shell_exec('cd /srv/nzlab.es/pre && sh ./deploy/deploy pre');
+            //error_log($result);
         }
 
 
+//        d($this->isGranted('ROLE_SUPER_ADMIN'), $this->getUser());
 
-        $this->log(array(
-            $request->headers->get('content-type'),
-            $request->headers->get('x-github-event'),
-            $request->headers->get('x-hub-signature'),
-            $request->getContent()
-        ));
+//        switch ($request->headers->get('content-type')) {
+//            case 'application/json':
+//                $json = $request->getContent();
+//                break;
+//
+//            case 'application/x-www-form-urlencoded':
+//                $json = $request->request->get('payload');
+//            default:
+//                throw new \Exception(sprintf("Unsupported content type: '%s'", $request->headers->get('content-type')));
+//                break;
+//        }
+
+
+//        $this->log(array(
+//            $request->headers->get('content-type'),
+//            $request->headers->get('x-github-event'),
+//            $request->headers->get('x-hub-signature'),
+//            $request->getContent()
+//        ));
 
         return new Response('working ...');
     }
