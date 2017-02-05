@@ -18,7 +18,7 @@ class DeployController extends Controller implements SecureControllerInterface
     {
 
 
-        $branch = basename($githubPayload->ref);
+        $branch = basename($githubPayload['ref']);
         echo 'push ' . $branch;
 //        dd($request, $githubPayload);
 //        error_log('push ----------------------------------------- ' . $branch);
