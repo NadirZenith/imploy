@@ -21,17 +21,15 @@ class DeployController extends Controller implements SecureControllerInterface
         $branch = basename($githubPayload['ref']);
         echo 'push ' . $branch;
 //        dd($request, $githubPayload);
-//        error_log('push ----------------------------------------- ' . $branch);
         if ('pre' == $branch) {
 
-            echo "goto pre and do git pull <br>";
             exec('cd /srv/nzlab.es/pre && /usr/bin/git pull origin pre 2>&1', $output);
-            echo implode('<br>', $output);
+            $this->log("goto pre and do git pull", $output);
+//            echo implode('<br>', $output);
 
             exec('cd /srv/nzlab.es/pre && sh ./deploy/deploy.sh dev', $output);
-            echo implode('<br>', $output);
-            //$result = shell_exec('cd /srv/nzlab.es/pre && sh ./deploy/deploy pre');
-            //error_log($result);
+            $this->log("goto pre and deploy dev", $output);
+
         }
 
 
@@ -57,7 +55,7 @@ class DeployController extends Controller implements SecureControllerInterface
 //            $request->getContent()
 //        ));
 
-        return new Response('working ...');
+        return new Response('ok');
     }
 
     /**
