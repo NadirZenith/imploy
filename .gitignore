@@ -19,6 +19,10 @@
 /web/.htaccess
 .idea
 /backups/
-/bin/composer
-/bin/php
+#exclude BIN binaries
+/bin/*
+!/bin/console
+!/bin/composer
+!/bin/symfony_requirements
+
 /node_modules
