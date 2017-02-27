@@ -87,11 +87,11 @@ else
 fi
 
 #Check for htaccess & robots
-if [ ! -e 'web/.htaccess' ]
-then
-    cp web/.htaccess.dist web/.htaccess
-    display_info ".htaccess generated"
-fi
+#if [ ! -e 'web/.htaccess' ]
+#then
+#    cp web/.htaccess.dist web/.htaccess
+#    display_info ".htaccess generated"
+#fi
 if [ ! -e 'web/robots.txt' ]
 then
     cp web/robots.txt.dist web/robots.txt
