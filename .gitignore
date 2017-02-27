@@ -21,3 +21,4 @@
 /backups/
 /bin/composer
 /bin/php
+/node_modules
