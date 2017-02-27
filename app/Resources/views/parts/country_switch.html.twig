@@ -1,0 +1,20 @@
+<div class="dropdown">
+    <a href="#" data-toggle="dropdown" data-placement="left" class="popover-button-header tooltip-button country_switch"
+       title="{% trans %}menu.admin.country_switch{% endtrans %}">
+        {{ form.country.vars.value|default(app.request.get('country', 'es'))|upper }}
+    </a>
+    <div class="dropdown-menu">
+        <div class="box-sm">
+            <div class="bg-gray text-transform-upr font-size-12 font-gray-dark pad10A">{% trans %}menu.admin.countries{% endtrans %}</div>
+
+            <div class="pad5T pad10B pad10L pad10R dashboard-buttons clearfix">
+                {% for choice in form.country.vars.choices %}
+                    <a href="{{ path('homepage', {'country' : choice.value}) }}" class="btn vertical-button hover-blue-alt {% if choice.value == form.country.vars.value %}active {% endif %} flag-{{ choice.value }} action switchCountry" title="{{ choice.label|trans }}">
+                        {{ choice.value|upper }}
+                    </a>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>

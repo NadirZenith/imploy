@@ -1,0 +1,40 @@
+{% extends 'base_list.html.twig' %}
+
+{% block action_title %}
+    {{ parent() }} <small>{% trans %}labels.label_pipelines{% endtrans %}</small>
+{% endblock %}
+
+{% block table_caption %}
+    <h2 class="title-hero">
+        {% trans %}labels.label_pipelines{% endtrans %}
+    </h2>
+    <a class="btn btn-primary btn-xs float-right" href="{{ path('app_pipeline_create') }}">
+        <i class="glyphicon glyphicon-plus"></i>
+        {% trans %}button.label_create{% endtrans %}</a>
+{% endblock %}
+
+{% block thead %}
+    <tr>
+        <th>{% trans %}labels.label_name{% endtrans %}</th>
+        {#<th>{% trans %}placeholder.url{% endtrans %}</th>#}
+        <th>{% trans %}labels.label_environment{% endtrans %}</th>
+        <th>{% trans %}labels.label_actions{% endtrans %}</th>
+    </tr>
+{% endblock %}
+
+{% block tbody %}
+    {% for pipeline in pipelines %}
+        <tr class="text-center">
+            <td><a href="{{ path('app_pipeline_read', {id: pipeline.id}) }}">{{ pipeline.name }}</a></td>
+            <td>{{ pipeline.environment }}</td>
+            <td>
+                <a class="btn btn-primary" href="{{ path('app_pipeline_read', {id: pipeline.id}) }}" role="button">
+                    {% trans %}button.label_edit{% endtrans %}
+                </a>
+                <a class="btn btn-default" href="{{ path('app_pipeline_delete', {id: pipeline.id}) }}" role="button">
+                    {% trans %}button.label_delete{% endtrans %}
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

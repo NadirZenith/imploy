@@ -1,0 +1,49 @@
+{% extends 'base_list.html.twig' %}
+
+{% import "parts/macros.html.twig" as utils %}
+
+{% block list_title %}
+    {% trans %}app.admin.view{% endtrans %}
+{% endblock %}
+
+{% block datatable_options %}
+    {{ utils.datatableOptions({'paging': false, 'info': false}) }}
+{% endblock %}
+
+{% block table_caption %}
+    <h2 class="title-hero">
+        {{ ("app.provider." ~ user.providerName)|trans() }}
+    </h2>
+{% endblock %}
+
+{% block thead %}
+    <tr>
+        <th>{% trans %}app.key{% endtrans %}</th>
+        <th>{% trans %}app.value{% endtrans %}</th>
+    </tr>
+{% endblock %}
+
+{% block tbody %}
+    {% for key, value in user %}
+        {% if key not in manager.hiddenTemplateFields %}
+            <tr>
+                <td>{{ ("form.label."~key)|trans() }}</td>
+                <td>{{ utils.user_value(value) }}
+                    {% if key == 'onekey' %}
+                        {% include 'parts/onekey_status.html.twig' with {'user' : user} only %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
+
+{% block table_actions %}
+    <a class="btn btn-primary" role="button" href="{{ path('app_remoteuser_update', {id: user.id, country: app.request.attributes.get("country"), provider: user.providerName } ) }}">{% trans %}admin.button.edit{% endtrans %}</a>
+    <a  class="btn btn-primary action validate" role="button"
+            {#data-unique-id="{{ user.uniqueId }}"#}
+       data-onekey="{{ user.onekey }}"
+       href="{{ path('app_remoteuser_validate', {id: user.id, country: app.request.attributes.get("country"), provider: user.providerName }) }}"
+    >{% trans %}admin.button.validate{% endtrans %}</a>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% set action = action|default(false) ? action : false %}
+
+{% block title %}
+    Dashboard - {{ parent() }}
+{% endblock %}
+
+{% block body_class %}loading {{ app.request.cookies.get('sidebar-collapsed') == "true" ? 'sidebar-collapsed' : '' }}{% endblock %}
+
+{% block body %}
+    <div id="sb-site">
+        <div id="page-wrapper">
+
+            <div id="page-header" class="clearfix">
+                <div id="header-logo" class="rm-transition"
+                     {% if app.environment == 'admin' %}style="background-color: red"{% endif %}>
+
+                    <a href="#" class="tooltip-button hidden-desktop" title="Navigation Menu" id="responsive-open-menu">
+                        <i class="glyph-icon icon-align-justify"></i>
+                    </a>
+                    <span>Imploy Backend <i class="opacity-80">1.0</i></span>
+
+                    <a id="collapse-sidebar" href="#" title="">
+                        <i class="glyph-icon icon-chevron-{{ app.request.cookies.get('sidebar-collapsed')  == "true" ? 'right' : 'left' }}"></i>
+                    </a>
+                </div>
+
+                <div id="header-left">
+                    {% block header_left %}
+                        {#{{ app_country_switch(app.request.attributes.get('country', false)) }}#}
+                    {% endblock %}
+                </div>
+                <div id="header-right">
+                    {% include 'parts/user_profile_dropdown.html.twig' %}
+                </div>
+            </div>
+
+            <div id="page-sidebar" class="rm-transition">
+                {% include 'parts/dashboard_sidemenu.html.twig' %}
+            </div>
+
+            <div id="page-content-wrapper" class="rm-transition">
+
+                <div id="content-helper">
+                    {% block content_helper %}
+                        {% include 'parts/content_helper.html.twig' %}
+                    {% endblock %}
+                </div>
+
+                <div id="page-content">
+                    <div class="page-box" id="content">
+
+                        {% block flash_message %}
+                            {% include 'parts/flash_messages.html.twig' %}
+                        {% endblock %}
+
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if app.environment == 'dev' %}
+        <script>window.DEBUG = 1;</script>
+    {% endif %}
+{% endblock %}

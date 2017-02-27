@@ -1,0 +1,5 @@
+{% if user.onekeyValid is same as(true) %}
+    <span title="Onekey valid" class="bs-label label-info">{% trans %}app.onekey.valid{% endtrans %}</span>
+{% elseif user.onekeyValid is same as(false) %}
+    <span title="Onekey invalid" class="bs-label label-danger">{% trans %}app.onekey.invalid{% endtrans %}</span>
+{% endif %}

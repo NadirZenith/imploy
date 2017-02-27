@@ -14,9 +14,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User extends BaseUser implements EquatableInterface
 {
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+
     public static $AVAILABLE_ROLES = array(
         'user.role.user'        => self::ROLE_DEFAULT,
+        'user.role.admin'       => self::ROLE_ADMIN,
         'user.role.super_admin' => self::ROLE_SUPER_ADMIN
+    );
+
+    public static $AVAILABLE_LOCALES = array(
+        'user.locale.en' => 'en',
+        'user.locale.es' => 'es'
     );
 
     /**

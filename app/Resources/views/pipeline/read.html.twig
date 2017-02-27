@@ -1,0 +1,47 @@
+{% extends 'base_list.html.twig' %}
+
+{% import "parts/macros.html.twig" as utils %}
+
+{% block action_title %}
+    {{ parent() }} <small>{% trans %}labels.label_pipeline{% endtrans %}</small>
+{% endblock %}
+
+{% block datatable_options %}
+    {{ utils.datatableOptions({'paging': false, 'info': false}) }}
+{% endblock %}
+
+{% block table_caption %}
+    <h2 class="title-hero">
+        {#{{ ("app.provider." ~ user.providerName)|trans() }}#}
+    </h2>
+{% endblock %}
+
+{% block thead %}
+    <tr>
+        <th>{% trans %}labels.label_key{% endtrans %}</th>
+        <th>{% trans %}labels.label_value{% endtrans %}</th>
+    </tr>
+{% endblock %}
+
+{% block tbody %}
+    <tr>
+        <td>{% trans %}labels.label_name{% endtrans %}</td>
+        <td>{{ pipeline.name }}</td>
+    </tr>
+    <tr>
+        <td>{% trans %}labels.label_url{% endtrans %}</td>
+        <td>{{ pipeline.url }}</td>
+    </tr>
+    <tr>
+        <td>{% trans %}labels.label_security_token{% endtrans %}</td>
+        <td>{{ pipeline.securityToken }}</td>
+    </tr>
+    <tr>
+        <td>{% trans %}labels.label_environment{% endtrans %}</td>
+        <td>{{ pipeline.environment }}</td>
+    </tr>
+{% endblock %}
+
+{% block table_actions %}
+    <a class="btn btn-primary" role="button" href="{{ path('app_pipeline_update', {id: pipeline.id} ) }}">{% trans %}labels.label_edit{% endtrans %}</a>
+{% endblock %}

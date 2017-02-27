@@ -1,0 +1,15 @@
+AppBundle\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: { fields: username }
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: { fields: email }
+
+    properties:
+        username:
+            - NotBlank: ~
+
+        email:
+            - NotBlank: ~
+            - Email: ~
+
+        plainPassword:
+            - NotBlank: { groups: [create] }

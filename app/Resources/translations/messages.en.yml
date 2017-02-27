@@ -1,0 +1,62 @@
+
+labels: &labels
+    label_edit:           Edit
+    label_username: Username
+    label_email: Email
+    label_password: Password
+    label_password_confirm: Confirm Password
+    label_user_roles: Roles
+    label_enabled: Enabled
+    label_delete: Delete
+    label_locale: Locale
+    label_country: Country
+    label_city: City
+    label_state: State
+    label_postalCode: Postal code
+    label_allowMailing: Allow mailing
+    label_surname1: First surname
+    label_surname2: Second surname
+    label_title: Title
+    label_name: Name
+    label_required: Required
+    label_save: Save
+    label_search: Search
+    label_registerOn: Registered On
+    label_birthday: Birthday
+    label_address: Address
+    label_first: First
+    label_last: Last
+    label_next: Next
+    label_previous: Previous
+    label_create: Create
+    label_update: Update
+    label_user: User
+    label_users: Users
+    label_dashboard: Dashoard
+    label_pipeline: Pipeline
+    label_pipelines: Pipelines
+    label_list: List
+    label_environment: Environment
+    label_actions: Actions
+    label_edit_profile: Edit Profile
+    label_logout: Logout
+    label_read: Read
+    label_key: Key
+    label_value: Value
+    label_url: Url
+    label_security_token: Security Token
+
+button:   *labels
+#action:   *labels
+
+placeholder.datatable.start_to_end: Showing _START_ to _END_ of _TOTAL_ entries
+placeholder.datatable.entries: Entries _MENU_
+
+user:
+    locale:
+        es: Spanish
+        en: English
+    role:
+        super_admin: Super Admin
+        admin: Admin
+        user: User

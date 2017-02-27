@@ -1,0 +1,40 @@
+{% extends 'base_list.html.twig' %}
+
+{% block action_title %}
+    {{ parent() }} <small>{% trans %}labels.label_users{% endtrans %}</small>
+{% endblock %}
+
+{% block datatable_options %}
+    {{ utils.datatableOptions({'paging': false, 'info': false}) }}
+{% endblock %}
+
+{% block table_caption %}
+    <h2 class="title-hero">
+        {% trans %}labels.label_users{% endtrans %}
+    </h2>
+    <a class="btn btn-primary btn-xs float-right" href="{{ path('app_appuser_create') }}">
+        <i class="glyphicon glyphicon-plus"></i>
+        {% trans %}labels.label_create{% endtrans %}</a>
+{% endblock %}
+
+{% block thead %}
+    <tr>
+        <th>{% trans %}labels.label_username{% endtrans %}</th>
+        <th>{% trans %}labels.label_email{% endtrans %}</th>
+        <th>{% trans %}labels.label_actions{% endtrans %}</th>
+    </tr>
+{% endblock %}
+
+{% block tbody %}
+    {% for user in users %}
+        <tr class="text-center">
+            <td><a href="{{ path('app_appuser_update', {id: user.id}) }}">{{ user.username }}</a></td>
+            <td>{{ user.email }}</td>
+            <td>
+                <a class="btn btn-primary" href="{{ path('app_appuser_update', {id: user.id}) }}" role="button">
+                    {% trans %}labels.label_edit{% endtrans %}
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

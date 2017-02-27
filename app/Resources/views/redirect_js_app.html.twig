@@ -1,0 +1,15 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block body_class %}{{ app.request.cookies.get('sidebar-collapsed') == "true" ? 'sidebar-collapsed' : '' }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% spaceless %}
+        <script>
+            $(function () {
+                App.makePageRequest("GET", '{{ url }}');
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}

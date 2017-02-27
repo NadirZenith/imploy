@@ -1,0 +1,28 @@
+{% extends 'base_list.html.twig' %}
+
+{% block datatable_options %}
+    {% import "parts/macros.html.twig" as utils %}
+    {{ utils.datatableOptions({'paging': false, 'info': false}) }}
+{% endblock %}
+
+{% block table_caption %}
+    <h2 class="title-hero">
+        {% trans %}app.platform.fields{% endtrans %}
+    </h2>
+{% endblock %}
+
+{% block thead %}
+    <tr>
+        <th>{% trans %}placeholder.role{% endtrans %}</th>
+        <th>{% trans %}placeholder.fields{% endtrans %}</th>
+    </tr>
+{% endblock %}
+
+{% block tbody %}
+    {% for role in roles %}
+        <tr>
+            <td><a href="{{ path('app_groupfields_update', {id: role.id}) }}">{{ role.name|trans() }}</a></td>
+            <td>{{ role.fields|join(' | ') }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}

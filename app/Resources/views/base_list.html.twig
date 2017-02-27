@@ -1,0 +1,27 @@
+
+{% extends app.request.xmlHttpRequest
+? '::dashboard-ajax.html.twig'
+: '::dashboard.html.twig' %}
+
+{% block content %}
+    <h3 class="page-title">
+        {% block action_title %}
+            {{ ("labels.label_" ~ action|default('list'))|trans() }}
+        {% endblock %}
+    </h3>
+
+    {% import "parts/macros.html.twig" as utils %}
+
+    {% block table %}
+        <table class="table table-striped dataTable" {% block datatable_options %}{{ utils.datatableOptions({})}}{% endblock %}>
+            <caption>{% block table_caption %}{% endblock %}</caption>
+            <thead>
+            {% block thead %}{% endblock %}
+            </thead>
+            <tbody>
+            {% block tbody %}{% endblock %}
+            </tbody>
+        </table>
+        {% block table_actions %}{% endblock %}
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "KnpMenuBundle::menu.html.twig" %}
+
+{# add icon #}
+{% block label %}
+    {# allow icons only for parent menus #}
+    {% if item.parent.parent is null %}
+        {% set icon = item.linkAttributes.icon|default('linecons-params') %}
+        <i class="glyph-icon icon-{{ icon }}"></i>
+    {% endif %}
+    <span>
+    {{ parent() }}
+    </span>
+{% endblock %}
+
+{# wrap menu without link in tag a to avoid break layout #}
+{% block spanElement %}
+    <a href="#">{{ block('label') }}</a>
+{% endblock %}
+

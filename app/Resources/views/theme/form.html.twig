@@ -1,0 +1,79 @@
+{% use "bootstrap_3_layout.html.twig" %}
+
+{# show buttons inline #}
+{% block button_row -%}
+    <div class="form-group-inline">
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock button_row %}
+
+{# text field icon addon #}
+{%- block form_widget_addon -%}
+    <span class="input-group-addon {{ addon.parentClass|default('') }}">
+        <i class="glyph-icon icon-{{ addon.icon|default('user') }}"></i>
+    </span>
+{%- endblock form_widget_addon -%}
+
+{# add addon if available #}
+{%- block form_widget_simple -%}
+    {%- set addon = form.vars.attr.addon|default(false) -%}
+    {% if addon %}
+        {%- set append_addon = addon.append|default(false) -%}
+        <div class="input-group">
+            {% if not append_addon %}
+                {{ block('form_widget_addon') }}
+            {% endif %}
+            {{ parent() }}
+            {% if  append_addon %}
+                {{ block('form_widget_addon') }}
+            {% endif %}
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{%- endblock form_widget_simple -%}
+
+{# if attr is addon skip print #}
+{%- block widget_attributes -%}
+    id="{{ id }}" name="{{ full_name }}"
+    {%- if disabled %} disabled="disabled"{% endif -%}
+    {%- if required %} required="required"{% endif -%}
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['addon'] -%}
+        {%- elseif attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ translation_domain is same as(false) ? attrvalue : attrvalue|trans({}, translation_domain) }}"
+        {%- elseif attrvalue is same as(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not same as(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock widget_attributes -%}
+
+{# change default btn class#}
+{% block button_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('btn-primary') ~ ' btn')|trim}) %}
+    {{- parent() -}}
+{%- endblock %}
+
+{# differentiate required fields #}
+{% block form_label -%}
+    {{- parent() -}}
+    {% if label is not same as(false) and required == true -%}
+        &nbsp;*
+    {% endif %}
+{%- endblock form_label %}
+
+{# Errors #}
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+        {#{% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}#}
+        <ul class="parsley-errors-list">
+            {%- for error in errors -%}
+                <li class="parsley-required">{{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
+        {#{% if form.parent %}</span>{% else %}</div>{% endif %}#}
+    {%- endif %}
+{%- endblock form_errors %}

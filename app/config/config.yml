@@ -2,7 +2,6 @@ imports:
     - { resource: parameters.yml }
 
     - { resource: extra/fos_user.yml }
-    - { resource: extra/sonata.yml }
 
     - { resource: security.yml }
     - { resource: services.yml }
@@ -42,8 +41,12 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    form_themes:
-        - 'SonataCoreBundle:Form:datepicker.html.twig'
+    form_themes: ['theme/form.html.twig']
+
+# Knp menu Configuration
+knp_menu:
+    twig:
+        template: 'theme/menu.html.twig'
 
 # Doctrine Configuration
 doctrine:

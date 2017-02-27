@@ -1,0 +1,31 @@
+{% macro user_value(value) %}
+    {% if value.timestamp is defined %}
+        {{ value.timestamp|date('d/m/y') }}
+    {% else %}
+        {{ value }}
+    {% endif %}
+{% endmacro %}
+
+{% macro provider_name(value) %}
+    {{ ("app.provider." ~ value)|trans() }}
+{% endmacro %}
+
+{% macro datatableOptions(options) %}
+    {% set datatable_options = {
+        'pageLength': 20,
+        'aaSorting' : [],
+        'language'  : {
+            'search'     : 'labels.label_search'|trans,
+            'info'       : 'placeholder.datatable.start_to_end'|trans,
+            'lengthMenu' : 'placeholder.datatable.entries'|trans,
+            'paginate'   : {
+                'first'    : 'button.label_first'|trans,
+                'last'     : 'button.label_last'|trans,
+                'previous' : 'button.label_previous'|trans,
+                'next'     : 'button.label_next'|trans
+            },
+        }
+    } %}
+
+    data-datatable-options='{{ datatable_options|merge(options)|json_encode|raw }}'
+{% endmacro %}

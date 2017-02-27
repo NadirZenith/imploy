@@ -12,6 +12,7 @@ web_profiler:
     intercept_redirects: false
 
 monolog:
+    channels: [user_actions]
     handlers:
         main:
             type: stream
@@ -29,6 +30,12 @@ monolog:
         #chromephp:
         #    type:   chromephp
         #    level:  info
+
+        mysql_log_handler:
+            type: service
+            id: mysql_log_handler
+            level:  info
+            channels: [user_actions]
 
 #swiftmailer:
 #    delivery_addresses: ['me@example.com']

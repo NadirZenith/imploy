@@ -1,0 +1,35 @@
+
+{% extends app.request.xmlHttpRequest
+? '::dashboard-ajax.html.twig'
+: '::dashboard.html.twig' %}
+
+{% block content %}
+    <h2>
+        {% trans %}admin.action.import{% endtrans %}
+    </h2>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right">
+                <a class="btn btn-xs btn-primary action"
+                   href="{{ path('app_remoteuser_downloadimporttemplate', { country: app.request.attributes.get("country"), provider: "couponing" }) }}">{% trans %}
+                    admin.button.download_template{% endtrans %}</a>
+                <a class="btn btn-xs btn-primary action import" href="">
+                    {% trans %}admin.button.import{% endtrans %}
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            {{ form(form) }}
+
+            <div id="import-status" style="padding-top: 20px;">
+                <div class="bar" style="height: 10px; width: 0%; background-color: #343942; border-radius: 3px"></div>
+                <div class="percent" style="text-align: center"></div>
+                <img class="loader" src="{{ asset('assets/img/loader-dark.gif') }}" style="display: none; margin: 0 auto; padding-top: 20px">
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

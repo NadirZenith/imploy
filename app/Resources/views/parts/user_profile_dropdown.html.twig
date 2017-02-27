@@ -1,0 +1,36 @@
+<div class="user-profile dropdown">
+    <a href="#" title="" class="user-ico clearfix" data-toggle="dropdown">
+        <img width="36" class="img-rounded" src="{{ asset('assets/img/profile_placeholder.png') }}" alt="">
+        <span>{{ app.user.username }}</span>
+        <i class="glyph-icon icon-chevron-down"></i>
+    </a>
+    <div class="dropdown-menu pad0B float-right">
+        <div class="box-sm">
+            <div class="login-box clearfix">
+                <div class="user-img">
+                    <a href="#" title="" class="change-img">Change photo</a>
+                    <img src="{{ asset('assets/img/profile_placeholder.png') }}" alt="">
+                </div>
+                <div class="user-info">
+                        <span>
+                            {{ app.user.username }}
+                            {#<i>Front-end web developer</i>#}
+                        </span>
+                    {% if app.user.id|default(false) %}
+                        <a href="{{ path('app_security_profile') }}" title="">{% trans %} labels.label_edit_profile {% endtrans %}</a>
+                    {% else %}
+                        IN MEMORY SUPER ADMIN
+                    {% endif %}
+                    {#<a href="#" title="">View notifications</a>#}
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="pad5A button-pane button-pane-alt text-center">
+                <a href="{{ path('fos_user_security_logout') }}" class="btn display-block font-normal btn-danger action">
+                    <i class="glyph-icon icon-power-off"></i>
+                    {% trans %} labels.label_logout {% endtrans %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

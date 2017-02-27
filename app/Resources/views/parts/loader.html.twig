@@ -1,0 +1,26 @@
+<div id="loader">
+    <div class="loader-wrapper">
+        <div class="loading-stick">
+            <div class="stick bg-green"></div>
+            <div class="stick bg-green"></div>
+            <div class="stick bg-green"></div>
+            <div class="stick bg-green"></div>
+            <div class="stick bg-green"></div>
+            <div class="stick bg-green"></div>
+            <h1>Loading...</h1>
+        </div>
+    </div>
+</div>
+
+{% spaceless %}
+    <noscript>
+        <div class="text-center text-warning pad10T">
+            <h3>{% trans %}app.no_javascript_detected{% endtrans %}</h3>
+        </div>
+        <style>
+            .loading #loader {
+                display: none;
+            }
+        </style>
+    </noscript>
+{% endspaceless %}

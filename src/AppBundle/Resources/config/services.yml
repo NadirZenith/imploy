@@ -1,12 +1,30 @@
 services:
-    app.admin.pipeline:
-        class: AppBundle\Admin\PipelineAdmin
-        arguments: [~, AppBundle\Entity\Pipeline, AppBundle:PipelineAdmin]
+  # Event Listeners ---------------------------------------
+    app.user_locale_listener:
+        class: AppBundle\EventListener\UserLocaleListener
+        arguments: ['@session']
         tags:
-            - { name: sonata.admin, manager_type: orm, group: admin, label: Pipeline }
+            - { name: kernel.event_listener, event: security.interactive_login, method: onInteractiveLogin }
 
-    app.admin.user:
-        class: AppBundle\Admin\UserAdmin
-        arguments: [~, AppBundle\Entity\User, AppBundle:UserAdmin]
+    app.locale_listener:
+        class: AppBundle\EventListener\LocaleListener
+        arguments: ['%kernel.default_locale%']
         tags:
-            - { name: sonata.admin, manager_type: orm, group: admin, label: User }
+           - { name: kernel.event_subscriber }
+
+    app.ajax_listener:
+        class: AppBundle\EventListener\AjaxListener
+        tags:
+           - { name: kernel.event_subscriber }
+
+  # Menu -------------------------------------------------
+    app.menu_builder:
+        class: AppBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory", "@security.authorization_checker"]
+        tags:
+            - { name: knp_menu.menu_builder, method: dashboardSidebar, alias: dashboard_sidebar_menu }
+
+    # log ---------------------------------------
+    mysql_log_handler:
+        class:  AppBundle\Services\MySQLogHandler
+        arguments: ['@doctrine', "@security.token_storage"]

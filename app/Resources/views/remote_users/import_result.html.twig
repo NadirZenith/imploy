@@ -1,0 +1,32 @@
+{% extends 'remote_users/list.html.twig' %}
+
+
+{% block table_actions %}
+
+    {% if errors is defined and errors is not empty %}
+        <table class="table table-striped">
+            <caption>{% trans %}admin.errors{% endtrans %}</caption>
+            <thead>
+            <tr>
+                <th>email</th>
+                <th>errors</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, err in errors %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>
+                        <ul>
+                            {% for field, error in err %}
+                                <li>{{ field }} -> {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

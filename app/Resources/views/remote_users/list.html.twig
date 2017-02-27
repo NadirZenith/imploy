@@ -1,0 +1,101 @@
+{% extends 'base_list.html.twig' %}
+
+{% block list_title %}
+    {{ parent() }}
+    {% if action != 'list' %}
+        <small>
+            {{ ('admin.action.' ~ action)|trans }}
+        </small>
+    {% else %}
+        {% if app.request.get('month') %}
+            <small>
+                {% if app.request.get('month') == 1 %}
+                    {% trans %}menu.admin.validator.less_one_month{% endtrans %}
+                {% elseif app.request.get('month') == 2 %}
+                    {% trans %}menu.admin.validator.less_two_months{% endtrans %}
+                {% elseif app.request.get('month') == 3 %}
+                    {% trans %}menu.admin.validator.less_three_months{% endtrans %}
+                {% elseif app.request.get('month') == 'plus-3' %}
+                    {% trans %}menu.admin.validator.more_three_months{% endtrans %}
+                {% endif %}
+            </small>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% import "parts/macros.html.twig" as utils %}
+
+{% block table_caption %}
+    <h2 class="title-hero">
+        {% if provider is defined %}
+            {{ utils.provider_name(provider) }}
+        {% else %}
+            {% for provider in manager.providers %}
+                {{ utils.provider_name(provider.id) }}
+                {% if loop.last == false %} | {% endif %}
+            {% endfor %}
+        {% endif %}
+        <small>({% trans %}app.admin.total{% endtrans %}: {{ users|length }})</small>
+    </h2>
+
+    {% if action == 'list' and users is not empty %}
+        <a class="btn btn-primary btn-xs action export float-right"
+           href="{{ path('app_remoteuser_export', { country: app.request.attributes.get("country"), provider: app.request.attributes.get('provider')} |merge(app.request.query.all)) }}">
+            <i class="glyphicon glyphicon-plus"></i>
+            {% trans %}admin.button.export{% endtrans %}
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block thead %}
+    {% if users is not empty %}
+        <tr>
+            {% for key, value in users.0 %}
+                {% if key not in manager.hiddenTemplateFields %}
+                    <th>{{ ("form.label."~key)|trans() }}</th>
+                {% endif %}
+            {% endfor %}
+            <th>{% trans %}placeholder.table.actions{% endtrans %}</th>
+        </tr>
+    {% endif %}
+{% endblock %}
+
+{% block tbody %}
+
+    {% for user in users %}
+        <tr>
+            {% for key, value in user %}
+                {% if key not in manager.hiddenTemplateFields %}
+                    <td>
+                        {% if key == manager.identifier %}
+                            <a href="{{ path('app_remoteuser_read', {id: user.id, country: app.request.attributes.get("country"), provider: user.providerName } ) }}">
+                                {{ value }}
+                                {% include 'parts/onekey_status.html.twig' with {'user' : user} only %}
+                            </a>
+                        {% elseif 'appOrigin' == key and 'couponing' == user.providerName and user.appOrigin is empty %}
+                            {% trans %}app.provider.couponing{% endtrans %}
+                        {% else %}
+                            {{ utils.user_value(value) }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+            {% endfor %}
+            {% block row_actions %}
+                <td>
+                    <a class="btn btn-xs btn-primary"
+                       href="{{ path('app_remoteuser_read', {id: user.id, country: app.request.attributes.get("country"), provider: user.providerName }) }}">
+                        {% trans %}admin.button.view{% endtrans %}
+                    </a>
+                    <a class="btn btn-xs btn-primary action validate" data-onekey="{{ user.onekey|default('') }}"
+                       href="{{ path('app_remoteuser_validate', {id: user.id, country: app.request.attributes.get("country"), provider: user.providerName }) }}">
+                        {% trans %}admin.button.validate{% endtrans %}
+                    </a>
+                </td>
+            {% endblock %}
+        </tr>
+    {% else %}
+        <tr class="text-center">
+            <td>{% trans %}app.admin.no_results{% endtrans %}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}

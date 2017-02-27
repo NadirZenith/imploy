@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block body_class %}loading{% endblock %}
+
+{% block body %}
+    {% include 'parts/loader.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% spaceless %}
+        <script>
+            window.location = '{{ url }}';
+        </script>
+    {% endspaceless %}
+{% endblock %}

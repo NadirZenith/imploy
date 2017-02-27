@@ -1,0 +1,11 @@
+{% if app.session.flashBag.peekAll %}
+    <div class="title-box pad10B">
+        {% for type, messages in app.session.flashbag.all() %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {% for message in messages %}
+                    <strong>{{ loop.index }}.</strong> {{ message|trans }}<br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

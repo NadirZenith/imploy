@@ -30,9 +30,8 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "raveren/kint": "^1.0",
         "friendsofsymfony/user-bundle": "dev-master",
-        "sonata-project/admin-bundle": "^3.13",
-        "sonata-project/doctrine-orm-admin-bundle": "^3.1",
-        "sensiolabs/ansi-to-html": "^1.1"
+        "sensiolabs/ansi-to-html": "^1.1",
+        "knplabs/knp-menu-bundle": "^2.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

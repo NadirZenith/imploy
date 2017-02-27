@@ -3,30 +3,32 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Pipeline;
+use AppBundle\Form\PipelineType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Pipeline controller.
  *
- * @Route("pipeline")
+ * @Route("/pipeline")
  */
 class PipelineController extends Controller
 {
     /**
      * Lists all pipeline entities.
      *
-     * @Route("/", name="pipeline_index")
+     * @Route("/")
      * @Method("GET")
      */
-    public function indexAction()
+    public function listAction()
     {
         $em = $this->getDoctrine()->getManager();
 
-        $pipelines = $em->getRepository('AppBundle:Pipeline')->findAll();
+        $pipelines = $em->getRepository(Pipeline::class)->findAll();
 
-        return $this->render('pipeline/index.html.twig', array(
+        return $this->render('pipeline/list.html.twig', array(
             'pipelines' => $pipelines,
         ));
     }
@@ -34,88 +36,89 @@ class PipelineController extends Controller
     /**
      * Creates a new pipeline entity.
      *
-     * @Route("/new", name="pipeline_new")
+     * @Route("/create")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function createAction(Request $request)
     {
-        $pipeline = new Pipeline();
-        $form = $this->createForm('AppBundle\Form\PipelineType', $pipeline);
+        $form = $this->createForm(PipelineType::class, new Pipeline());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($pipeline);
-            $em->flush($pipeline);
+            $em->persist($form->getData());
+            $em->flush();
 
-            return $this->redirectToRoute('pipeline_show', array('id' => $pipeline->getId()));
+            return $this->redirectToRoute('app_pipeline_read', array('id' => $form->getData()->getId()));
         }
 
-        return $this->render('pipeline/new.html.twig', array(
-            'pipeline' => $pipeline,
-            'form' => $form->createView(),
+        return $this->render('pipeline/form.html.twig', array(
+            'action' => 'create',
+            'form'   => $form->createView(),
         ));
     }
 
     /**
      * Finds and displays a pipeline entity.
      *
-     * @Route("/{id}", name="pipeline_show")
+     * @Route("/{id}")
      * @Method("GET")
+     * @param Pipeline $pipeline
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction(Pipeline $pipeline)
+    public function readAction(Pipeline $pipeline)
     {
-        $deleteForm = $this->createDeleteForm($pipeline);
 
-        return $this->render('pipeline/show.html.twig', array(
-            'pipeline' => $pipeline,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render('pipeline/read.html.twig', array(
+            'action'   => 'read',
+            'pipeline' => $pipeline,));
     }
 
     /**
      * Displays a form to edit an existing pipeline entity.
      *
-     * @Route("/{id}/edit", name="pipeline_edit")
+     * @Route("/{id}/update")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Pipeline $pipeline
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, Pipeline $pipeline)
+    public function updateAction(Request $request, Pipeline $pipeline)
     {
-        $deleteForm = $this->createDeleteForm($pipeline);
-        $editForm = $this->createForm('AppBundle\Form\PipelineType', $pipeline);
-        $editForm->handleRequest($request);
+        $form = $this->createForm(PipelineType::class, $pipeline);
+        $form->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        // delete
+        if ($form->get('delete')->isClicked()) {
+            return $this->deleteAction($request, $pipeline);
+
+        } // update
+        elseif ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('pipeline_edit', array('id' => $pipeline->getId()));
+            return $this->redirectToRoute('app_pipeline_update', array('id' => $pipeline->getId()));
         }
 
-        return $this->render('pipeline/edit.html.twig', array(
-            'pipeline' => $pipeline,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+        return $this->render('pipeline/form.html.twig', array(
+            'action' => 'update',
+            'form'   => $form->createView()
         ));
     }
 
     /**
      * Deletes a pipeline entity.
      *
-     * @Route("/{id}", name="pipeline_delete")
-     * @Method("DELETE")
+     * @Route("/{id}/delete")
+     * @param Request $request
+     * @param Pipeline $pipeline
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Pipeline $pipeline)
     {
-        $form = $this->createDeleteForm($pipeline);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($pipeline);
-            $em->flush($pipeline);
-        }
-
-        return $this->redirectToRoute('pipeline_index');
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($pipeline);
+        $em->flush($pipeline);
+        return $this->redirectToRoute('app_pipeline_list');
     }
 
     /**
@@ -128,9 +131,8 @@ class PipelineController extends Controller
     private function createDeleteForm(Pipeline $pipeline)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('pipeline_delete', array('id' => $pipeline->getId())))
+            ->setAction($this->generateUrl('app_pipeline_delete', array('id' => $pipeline->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }
