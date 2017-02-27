@@ -8,6 +8,14 @@ use FOS\UserBundle\Controller\SecurityController as FOSSecurityController;
 
 class SecurityController extends FOSSecurityController
 {
+
+    public function loginAction(Request $request)
+    {
+        $this->get('profiler')->disable();
+
+        return parent::loginAction($request);
+    }
+
     /**
      * @Route("/profile")
      */
