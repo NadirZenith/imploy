@@ -13,7 +13,7 @@ then
 else
     pwd=`pwd`
     display_info "Deploying cwd: $pwd"
-    display_success "Environment: $1"
+    display_success "Environment:    $1"
 fi
 
 #Check php binary
@@ -61,7 +61,7 @@ else
     if version_lt $min $version; then
         display_success "NPM found:  $version"
     else
-        display_error "Old npm version found, require +$min"
+        display_error "Old npm version found: $version, require +$min"
         die
     fi
 fi
