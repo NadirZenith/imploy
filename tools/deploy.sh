@@ -5,15 +5,14 @@
 
 . $(dirname "$0")/functions.sh
 
-pwd=`pwd`
-display_info "Working Dir: $pwd"
-
 #Check parameters
 if [ $# -eq 0 ]
 then
     display_error "You must set an environment (dev|test|prod)"
     die
 else
+    pwd=`pwd`
+    display_info "Deploying cwd: $pwd"
     display_success "Environment: $1"
 fi
 
