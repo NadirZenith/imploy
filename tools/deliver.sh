@@ -7,7 +7,7 @@
 
 
 #Check parameters
-if [ $# -eq 0 ] || [[ "$1" != "master" ]] && [[ "$1" != "pre" ]]
+if [ $# -eq 0 ] || [ "$1" != "master" ] && [ "$1" != "pre" ]
 then
     display_error "You must set a branch to deliver (master/pre)"
     die
