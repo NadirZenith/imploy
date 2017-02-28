@@ -21,19 +21,20 @@ class DeployController extends Controller implements SecureControllerInterface
     public function postAction($githubPayload, Request $request)
     {
 
-
         $branch = basename($githubPayload['ref']);
         echo 'push ' . $branch;
 //        dd($request, $githubPayload);
         if ('pre' == $branch) {
+            echo date('d/m/y H:i:s');
+            $this->log(array($request->headers->all(), $githubPayload));
 
             exec('cd /srv/nzlab.es/pre && /usr/bin/git pull origin pre 2>&1', $output);
             $this->log("goto pre and do git pull");
-            $this->log($output);
+            $this->log($this->ansi2Html($output));
 
             exec('cd /srv/nzlab.es/pre && sh ./deploy/deploy.sh dev', $output);
             $this->log("goto pre and deploy dev");
-            $this->log($output);
+            $this->log($this->ansi2Html($output));
 
         }
 
@@ -171,8 +172,11 @@ class DeployController extends Controller implements SecureControllerInterface
         $file = $dir . $filename;
 
         ob_start();
-        echo date('d/m/y H:i:s');
-        d($log);
+        if (is_string($log)) {
+            echo $log;
+        } else {
+            d($log);
+        }
         $content = ob_get_clean();
 
         file_put_contents($file, $content, FILE_APPEND | LOCK_EX);
