@@ -7,15 +7,15 @@
 
 
 #Check parameters
-if [ $# -eq 0 ] || [ "$1" != "master" ] && [ "$1" != "pre" ]
+if [ $# -eq 0 ] || ([ "$1" != "master" ] && [ "$1" != "pre" ])
 then
     display_error "You must set a branch to deliver (master/pre)"
     die
 #else
-#    branch=$1
 #    display_info "Trying to deliver branch: $branch"
 fi
 
+branch=$1
 server_alias='nzlabes'
 base_dir='/srv/imploy'
 destination_dir="$base_dir/"
@@ -40,7 +40,6 @@ git checkout $branch;
 git pull origin $branch;
 sh ./tools/deploy.sh $env;
 exit"
-
 
 display_info "Finished deliver"
 
