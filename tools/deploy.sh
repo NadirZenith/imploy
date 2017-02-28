@@ -85,7 +85,7 @@ else
     display_success "* dump() calls not found views"
 fi
 
-#Check for htaccess & robots
+#Check for htaccess & robots(apache only)
 #if [ ! -e 'web/.htaccess' ]
 #then
 #    cp web/.htaccess.dist web/.htaccess
@@ -97,13 +97,12 @@ then
     display_info "robots.txt generated"
 fi
 
-
-display_info 'Check for NPM updates'
-bin/npm update
-bin/npm list --depth=0
-
 if [ $1 = 'dev' ]
 then
+    display_info 'Check for NPM updates'
+    bin/npm update
+    bin/npm list --depth=0
+
     display_info 'Check for COMPOSER updates'
     export SYMFONY_ENV=dev
     bin/composer install
