@@ -11,31 +11,31 @@ if [ $# -eq 0 ] || [ "$1" != "master" ] && [ "$1" != "pre" ]
 then
     display_error "You must set a branch to deliver (master/pre)"
     die
-else
-    branch=$1
-    display_info "Trying to deliver branch: $branch"
+#else
+#    branch=$1
+#    display_info "Trying to deliver branch: $branch"
 fi
-
-env="dev"
-#if [[ "$branch" == "master" ]]
-#then
-#    env="prod"
-#fi
 
 server_alias='nzlabes'
 base_dir='/srv/imploy'
 destination_dir="$base_dir/"
 #destination_dir="$base_dir/$branch"
+env="dev"
+#if [ "$branch" == "master" ]
+#then
+#    env="prod"
+#fi
 
-display_info "Delivering here: $destination_dir"
-display_info "branch: $branch"
-display_info "environment: $env"
+display_info "Delivering:    $server_alias:$destination_dir"
+display_info "Branch:        $branch"
+display_info "Environment:   $env"
 
 #die
 #ssh nzlabes "
 ssh $server_alias "
 mkdir -p $destination_dir;
 cd $destination_dir;
+echo "Current user:";whoami;
 git checkout $branch;
 git pull origin $branch;
 sh ./tools/deploy.sh $env;

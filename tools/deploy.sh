@@ -24,7 +24,7 @@ then
     die
 else
     version=`bin/php -v | grep cli`
-    display_success "PHP found:      $version"
+    display_success "PHP:      $version"
 fi
 
 #Check Composer binary
@@ -35,7 +35,7 @@ then
     die
 else
     version=`bin/composer -V`
-    display_success "Composer found: $version"
+    display_success "Composer: $version"
 fi
 
 #Check NODE binary
@@ -46,7 +46,7 @@ then
     die
 else
     version=`bin/node -v`
-    display_success "Node found:     $version"
+    display_success "Node:     $version"
 fi
 
 #Check NPM binary
@@ -59,7 +59,7 @@ else
     version=`bin/npm -v`
     min='2.0'
     if version_lt $min $version; then
-        display_success "NPM found:  $version"
+        display_success "NPM:      $version"
     else
         display_error "Old npm version found: $version, require +$min"
         die
