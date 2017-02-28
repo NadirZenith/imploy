@@ -21,16 +21,16 @@ base_dir='/srv/imploy'
 destination_dir="$base_dir/"
 #destination_dir="$base_dir/$branch"
 env="dev"
-#if [ "$branch" == "master" ]
-#then
-#    env="prod"
-#fi
+if [ "$branch" = "master" ]
+then
+    env="prod"
+fi
 
 display_info "Delivering:    $server_alias:$destination_dir"
 display_info "Branch:        $branch"
 display_info "Environment:   $env"
 
-#die
+die
 #ssh nzlabes "
 ssh $server_alias "
 mkdir -p $destination_dir;
