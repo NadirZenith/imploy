@@ -5,8 +5,8 @@
 
 . $(dirname "$0")/functions.sh
 
-display_info "Working Dir:"
-pwd
+pwd=`pwd`
+display_info "Working Dir: $pwd"
 
 #Check parameters
 if [ $# -eq 0 ]
