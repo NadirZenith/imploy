@@ -120,8 +120,8 @@ then
     bin/composer install
 
     display_success 'Upgrade database'
-    bin/php app/console doctrine:schema:update --dump-sql --force
-    bin/php app/console doctrine:fixtures:load --no-interaction
+    bin/php bin/console doctrine:schema:update --dump-sql --force
+    bin/php bin/console doctrine:fixtures:load --no-interaction
 
 #    display_success 'Generate ASSETS'
 #    bin/node node_modules/.bin/grunt --force package
@@ -133,7 +133,7 @@ then
     bin/composer install --no-dev --optimize-autoloader
 
     display_success 'Upgrade database'
-    bin/php app/console doctrine:schema:update --dump-sql --force
+    bin/php bin/console doctrine:schema:update --dump-sql --force
 
 #    display_success 'Generate ASSETS'
 #    bin/node node_modules/.bin/grunt --force package
