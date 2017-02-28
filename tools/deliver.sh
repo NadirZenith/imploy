@@ -30,7 +30,6 @@ display_info "Delivering:    $server_alias:$destination_dir"
 display_info "Branch:        $branch"
 display_info "Environment:   $env"
 
-die
 #ssh nzlabes "
 ssh $server_alias "
 mkdir -p $destination_dir;
