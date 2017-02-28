@@ -133,11 +133,12 @@ class DeployController extends Controller implements SecureControllerInterface
             $lines = array($lines);
         }
 
-        $html = '';
+        $html = '<pre>';
         foreach ($lines as $line) {
             $html .= $this->converter->convert($line) . "\n";
 //            $html .= $this->converter->convert($line) . "<br>\r\n";
         }
+        $html .= '</pre>';
 
         return $html;
 
