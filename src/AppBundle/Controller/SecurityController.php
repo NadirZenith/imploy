@@ -11,9 +11,9 @@ class SecurityController extends FOSSecurityController
 
     public function loginAction(Request $request)
     {
-        if ($this->has('profiler')) {
-            $this->get('profiler')->disable();
-        }
+//        if ($this->has('profiler') && !$this->getParameter('kernel.debug')) {
+//            $this->get('profiler')->disable();
+//        }
 
         return parent::loginAction($request);
     }

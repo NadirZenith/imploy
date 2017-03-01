@@ -1,5 +1,10 @@
 services:
   # Event Listeners ---------------------------------------
+    app.ajax_listener:
+        class: AppBundle\EventListener\AjaxListener
+        tags:
+           - { name: kernel.event_subscriber }
+
     app.user_locale_listener:
         class: AppBundle\EventListener\UserLocaleListener
         arguments: ['@session']
@@ -12,10 +17,38 @@ services:
         tags:
            - { name: kernel.event_subscriber }
 
-    app.ajax_listener:
-        class: AppBundle\EventListener\AjaxListener
-        tags:
-           - { name: kernel.event_subscriber }
+    # deploy payload builder
+    app.git_listener:
+            class: AppBundle\EventListener\GitListener
+    #            arguments: ['%tokens%']
+            tags:
+                - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    # git authentication ---------------------------------
+    gitsecret_authenticator:
+            class:  AppBundle\Security\GitSecretAuthenticator
+            public: false
+            arguments:
+                - '@app_pipeline_repository'
+
+    gitsecret_user_provider:
+            class: AppBundle\Security\GitSecretUserProvider
+            arguments:
+                - '@app_user_repository'
+
+    # Repositories ---------------------------------------
+    app_user_repository:
+            class: AppBundle\Repository\UserRepository
+            factory: ["@doctrine", getRepository]
+            arguments:
+                - 'AppBundle:User'
+
+    app_pipeline_repository:
+            class: AppBundle\Repository\PipelineRepository
+            factory: ["@doctrine", getRepository]
+            arguments:
+                - 'AppBundle:Pipeline'
+
 
   # Menu -------------------------------------------------
     app.menu_builder:
@@ -24,7 +57,7 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: dashboardSidebar, alias: dashboard_sidebar_menu }
 
-    # log ---------------------------------------
+    # Log ------------------------------------------------
     mysql_log_handler:
         class:  AppBundle\Services\MySQLogHandler
         arguments: ['@doctrine', "@security.token_storage"]

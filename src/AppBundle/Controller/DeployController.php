@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use SensioLabs\AnsiConverter\Theme\SolarizedTheme;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,12 +21,19 @@ class DeployController extends Controller implements SecureControllerInterface
      */
     public function postAction($githubPayload, Request $request)
     {
+        $this->denyAccessUnlessGranted(User::ROLE_DEPLOY);
+
+//        dd($this->getUser());
 
         $branch = basename($githubPayload['ref']);
-        echo 'push ' . $branch;
+        $response = '';
 //        dd($request, $githubPayload);
         if ('pre' == $branch) {
-            echo date('d/m/y H:i:s');
+            $response .= 'push ' . $branch . ' ';
+            $response .= date('d/m/y H:i:s');
+            return new Response($response);
+
+
             $this->log(array($request->headers->all(), $githubPayload));
 
             exec('cd /srv/nzlab.es/pre && /usr/bin/git pull origin pre 2>&1', $output);
@@ -61,7 +69,7 @@ class DeployController extends Controller implements SecureControllerInterface
 //            $request->getContent()
 //        ));
 
-        return new Response('ok');
+        return new Response('ok nothing');
     }
 
     /**

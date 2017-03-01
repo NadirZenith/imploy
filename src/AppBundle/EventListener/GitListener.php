@@ -12,7 +12,7 @@ class GitListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $controller = $event->getController();
-
+//dd('df');
         return;
         if (!is_array($controller) || !$controller[0] instanceof SecureControllerInterface) {
             return;

@@ -28,7 +28,7 @@ class GitSecretAuthenticator implements SimplePreAuthenticatorInterface, Authent
     {
         // look for an x-hub-signature header
         $signature = $request->headers->get('x-hub-signature');
-
+//dd($request->headers->all());
         if (!$signature) {
             throw new BadCredentialsException();
             // or to just skip api key authentication
@@ -42,6 +42,10 @@ class GitSecretAuthenticator implements SimplePreAuthenticatorInterface, Authent
         }
 
         $content = $request->getContent();
+        if (!$content) {
+            throw new BadCredentialsException();
+        }
+
         $payload = json_decode($content, true);
         $request->attributes->set('githubPayload', $payload);
 
@@ -95,7 +99,6 @@ class GitSecretAuthenticator implements SimplePreAuthenticatorInterface, Authent
             throw new CustomUserMessageAuthenticationException('Hook secret does not match.');
         }
 
-//        return new PreAuthenticatedToken($user, $gitSecret, $providerKey, array());
         return new PreAuthenticatedToken($user, $signature, $providerKey, $user->getRoles());
     }
 

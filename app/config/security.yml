@@ -7,8 +7,9 @@ security:
             FOS\UserBundle\Model\UserInterface: bcrypt
 
     role_hierarchy:
-            ROLE_SUPER_ADMIN:    ROLE_ADMIN
-            ROLE_ADMIN:          ROLE_USER
+            !php/const:AppBundle\Entity\User::ROLE_SUPER_ADMIN:    !php/const:AppBundle\Entity\User::ROLE_ADMIN
+            !php/const:AppBundle\Entity\User::ROLE_ADMIN:          !php/const:AppBundle\Entity\User::ROLE_DEFAULT
+            !php/const:AppBundle\Entity\User::ROLE_DEPLOY:          ~
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
@@ -33,7 +34,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        git_post:
+        payload:
             pattern: ^/payload
             stateless: true
             simple_preauth:
@@ -42,7 +43,6 @@ security:
 
         main:
              pattern: ^/
-
              form_login:
                  provider: chain_provider
 #                 provider: fos_userbundle
