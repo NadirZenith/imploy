@@ -1,4 +1,9 @@
 services:
+    # Log ------------------------------------------------
+    mysql_log_handler:
+        class:  AppBundle\Services\MySQLogHandler
+        arguments: ['@doctrine', "@security.token_storage"]
+
   # Event Listeners ---------------------------------------
     app.ajax_listener:
         class: AppBundle\EventListener\AjaxListener
@@ -22,19 +27,24 @@ services:
             class: AppBundle\EventListener\GitListener
     #            arguments: ['%tokens%']
             tags:
+#                - { name: kernel.event_listener, event: kernel.request, method: onKernelController, priority: 100 }
                 - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
-    # git authentication ---------------------------------
-    gitsecret_authenticator:
-            class:  AppBundle\Security\GitSecretAuthenticator
+    # authentication ---------------------------------
+    app.githook_authenticator:
+            class:  AppBundle\Security\GitHookAuthenticator
             public: false
-            arguments:
-                - '@app_pipeline_repository'
 
-    gitsecret_user_provider:
+    app.git_username_user_provider:
             class: AppBundle\Security\GitSecretUserProvider
             arguments:
                 - '@app_user_repository'
+
+    app.ping_deploy_authenticator:
+            class:  AppBundle\Security\PingDeployAuthenticator
+            arguments:
+                - '@security.password_encoder'
+            public: false
 
     # Repositories ---------------------------------------
     app_user_repository:
@@ -56,8 +66,3 @@ services:
         arguments: ["@knp_menu.factory", "@security.authorization_checker"]
         tags:
             - { name: knp_menu.menu_builder, method: dashboardSidebar, alias: dashboard_sidebar_menu }
-
-    # Log ------------------------------------------------
-    mysql_log_handler:
-        class:  AppBundle\Services\MySQLogHandler
-        arguments: ['@doctrine', "@security.token_storage"]

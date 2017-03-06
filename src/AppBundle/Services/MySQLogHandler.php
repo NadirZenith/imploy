@@ -59,6 +59,7 @@ class MySQLogHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
+        return;
         $context = $record['context'];
 
         if (!isset($context['agent'])) {

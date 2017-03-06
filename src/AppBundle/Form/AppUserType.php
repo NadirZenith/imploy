@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -67,6 +68,16 @@ class AppUserType extends AbstractType
                 'label'        => 'labels.label_locale',
                 'choices'      => User::$AVAILABLE_LOCALES,
                 'attr'         => array('class' => 'chosen-select')
+            ))
+            ->add('githubUsername', TextType::class, array(
+                'label' => 'labels.label_github_username',
+                'attr'  => array('addon' => array('icon' => 'user'))
+            ))
+            ->add('pipeline', EntityType::class, array(
+                'label' => 'labels.label_pipeline',
+                'class' => 'AppBundle\Entity\Pipeline',
+                'choice_label' => 'name',
+                'attr'  => array('class' => 'chosen-select')
             ))
             // submit
             ->add('save', SubmitType::class, array('label' => 'labels.label_save', 'attr' => array('parentClass' => 'test')))

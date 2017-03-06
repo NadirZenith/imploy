@@ -22,7 +22,7 @@ class User extends BaseUser implements EquatableInterface
         'user.role.admin'       => self::ROLE_ADMIN,
         'user.role.super_admin' => self::ROLE_SUPER_ADMIN,
         // APP
-        'user.role.deploy'    => self::ROLE_DEPLOY,
+        'user.role.deploy'      => self::ROLE_DEPLOY,
     );
 
     public static $AVAILABLE_LOCALES = array(
@@ -53,6 +53,19 @@ class User extends BaseUser implements EquatableInterface
     protected $locale = 'en';
 
     /**
+     * @var string
+     * @ORM\Column(name="github_username", type="string", nullable=true)
+     */
+    protected $githubUsername;
+
+    /**
+     * @var string
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Pipeline", inversedBy="users")
+     * @ORM\JoinColumn(name="pipeline_id", referencedColumnName="id")
+     */
+    protected $pipeline;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -81,24 +94,38 @@ class User extends BaseUser implements EquatableInterface
         return $this->createdOn;
     }
 
-    public function setCreatedOn($createdOn)
+    /**
+     * @param $createdOn
+     * @return $this
+     */
+    public function setCreatedOn(\DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
 
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getLocale()
     {
         return $this->locale;
     }
 
+    /**
+     * @param string $locale
+     */
     public function setLocale($locale = 'en')
     {
         $this->locale = $locale;
     }
 
 
+    /**
+     * @param UserInterface $user
+     * @return bool
+     */
     public function isEqualTo(UserInterface $user)
     {
 
@@ -121,8 +148,43 @@ class User extends BaseUser implements EquatableInterface
 
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return sprintf("%s:%d", $this->getUsername(), $this->getId());
+    }
+
+    /**
+     * @return string
+     */
+    public function getGithubUsername()
+    {
+        return $this->githubUsername;
+    }
+
+    /**
+     * @param string $githubUsername
+     */
+    public function setGithubUsername($githubUsername)
+    {
+        $this->githubUsername = $githubUsername;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPipeline()
+    {
+        return $this->pipeline;
+    }
+
+    /**
+     * @param string $pipeline
+     */
+    public function setPipeline($pipeline)
+    {
+        $this->pipeline = $pipeline;
     }
 }

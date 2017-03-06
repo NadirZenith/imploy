@@ -3,6 +3,7 @@
 namespace AppBundle\Security;
 
 use AppBundle\Repository\UserRepository;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -17,30 +18,15 @@ class GitSecretUserProvider implements UserProviderInterface
         $this->userRepository = $userRepository;
     }
 
-
-    /**
-     * @param $email
-     * @return null|\AppBundle\Entity\User
-     */
-    public function loadUserByEmail($email)
-    {
-        /** @var \AppBundle\Entity\User $user */
-        $user = $this->userRepository->findOneBy(array('email' => $email));
-
-        return $user;
-    }
-
     public function loadUserByUsername($username)
     {
-        dd($username);
-        return false;
-        return new User(
-            $username,
-            null,
-            // the roles for the user - you may choose to determine
-            // these dynamically somehow based on the user
-            array('ROLE_API')
-        );
+        $user = $this->userRepository->findOneBy(array('githubUsername' => $username));
+
+        if (!$user) {
+            throw new UsernameNotFoundException('not found git secret');
+        }
+
+        return $user;
     }
 
     public function refreshUser(UserInterface $user)

@@ -164,7 +164,7 @@ class AppUserControllerTest extends WebTestCase
 
     public function testAppUserUpdateAction($url = '/config/users/%d/update')
     {
-        $url1 = sprintf($url, $this->getUserBy(array('email' => 'test@domain.com'))->getId());
+        $url1 = sprintf($url, $this->getUserBy(array('email' => 'admin@domain.com'))->getId());
 
         $client = $this->getClient();
         $crawler = $this->getAuthCrawler($client, $url1);
@@ -189,21 +189,6 @@ class AppUserControllerTest extends WebTestCase
 
         $form = $crawler->selectButton('user_save')->form();
         $this->assertEquals($form['user']['username']->getValue(), 'test-edit');
-
-        // LDAP USER --------------------
-        $url2 = sprintf($url, $this->getUserBy(array('email' => 'test-ldap@domain.com'))->getId());
-        $crawler = $client->request('GET', $url2);
-
-        $form = $crawler->selectButton('user_saveLDAP')->form();
-        $values = $form->getPhpValues();
-        $values['user']['username'] = 'test-edit-ldap';
-
-        $crawler = $client->request($form->getMethod(), $form->getUri(), $values, $form->getPhpFiles());
-        $this->assertNotContains('has-error', $crawler->html());
-
-        // redirects to update
-        $this->assertEquals($client->getResponse()->getStatusCode(), 302);
-        $this->assertTrue($client->getResponse()->isRedirection());
 
     }
 

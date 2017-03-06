@@ -12,11 +12,12 @@ class DeployControllerTest extends WebTestCase
     public function testPayload()
     {
         $client = $this->getClient();
-//        $crawler = $client->request('GET', '/');
+
         $crawler = $client->request('POST', '/payload',
             array(),
             array(),
             array(
+                'CONTENT_TYPE'          => 'application/json',
                 'HTTP_User-Agent'        => 'GitHub-Hookshot/886c556',
                 'HTTP_X-GitHub-Delivery' => 'ec46b900-fe77-11e6-9c76-f4231ba8608e',
                 'HTTP_X-GitHub-Event'    => 'push',
@@ -26,12 +27,11 @@ class DeployControllerTest extends WebTestCase
         );
 
         dd($crawler->html());
-        dd($this->getGitPayload());
-        $client = static::createClient();
 
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+//        $client = static::createClient();
+//        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+//        $this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
     }
 
     private function getGitPayload()

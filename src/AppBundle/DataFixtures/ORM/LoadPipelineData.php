@@ -38,6 +38,13 @@ class LoadPipelineData implements FixtureInterface, ContainerAwareInterface
         $pipeline->setEnvironment('dev');
         $manager->persist($pipeline);
 
+        $pipeline = new Pipeline();
+        $pipeline->setName('test master');
+        $pipeline->setUrl('https://gitlab.com/NadirZenith/test');
+        $pipeline->setSecurityToken('secret');
+        $pipeline->setEnvironment('master');
+        $manager->persist($pipeline);
+
         $manager->flush();
     }
 }

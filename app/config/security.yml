@@ -9,24 +9,42 @@ security:
     role_hierarchy:
             !php/const:AppBundle\Entity\User::ROLE_SUPER_ADMIN:    !php/const:AppBundle\Entity\User::ROLE_ADMIN
             !php/const:AppBundle\Entity\User::ROLE_ADMIN:          !php/const:AppBundle\Entity\User::ROLE_DEFAULT
-            !php/const:AppBundle\Entity\User::ROLE_DEPLOY:          ~
+            !php/const:AppBundle\Entity\User::ROLE_DEPLOY:         !php/const:AppBundle\Entity\User::ROLE_DEFAULT
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        chain_provider:
-            chain:
-                providers: [fos_user, in_memory]
-
-        gitsecret_user_provider:
-            id: gitsecret_user_provider
-
-        fos_user:
-                id: fos_user.user_provider.username_email
-
-        in_memory:
+        ## Backend
+        backend_static:
             memory:
                 users:
-                   dev: { password: '%password_dev%', roles: ROLE_SUPER_ADMIN }
+                   dev:    { password: '%password_dev%', roles: !php/const:AppBundle\Entity\User::ROLE_SUPER_ADMIN }
+
+        backend_fos_user:
+                id: fos_user.user_provider.username_email
+
+        username_provider:
+            chain:
+                providers: [backend_fos_user, backend_static]
+
+        ## Payload
+        githook_user_provider:
+            id: app.git_username_user_provider
+
+#        deploy_fos_user:
+#            entity:
+#                class: AppBundle:User
+#                property: githubUsername
+
+        deploy_static:
+            memory:
+                users:
+                   deploy: { password: '%password_dev%', roles: !php/const:AppBundle\Entity\User::ROLE_DEPLOY }
+
+        github_username_provider:
+            chain:
+#                providers: [githook_user_provider, deploy_static]
+                providers: [deploy_static, githook_user_provider ]
+
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -37,14 +55,19 @@ security:
         payload:
             pattern: ^/payload
             stateless: true
-            simple_preauth:
-                authenticator: gitsecret_authenticator
-            provider: gitsecret_user_provider
+            provider: github_username_provider
+#            provider: deploy_static
+            guard:
+              entry_point: app.ping_deploy_authenticator
+#              entry_point: app.githook_authenticator
+              authenticators:
+                  - app.githook_authenticator
+                  - app.ping_deploy_authenticator
 
         main:
              pattern: ^/
              form_login:
-                 provider: chain_provider
+                 provider: username_provider
 #                 provider: fos_userbundle
                  csrf_token_generator: security.csrf.token_manager
                  default_target_path: admin_dashboard

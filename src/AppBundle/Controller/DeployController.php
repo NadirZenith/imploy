@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Model\DeployPayload;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use SensioLabs\AnsiConverter\Theme\SolarizedTheme;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,10 +20,10 @@ class DeployController extends Controller implements SecureControllerInterface
      * @Route("/payload")
      * @Method("POST")
      */
-    public function postAction($githubPayload, Request $request)
+    public function postAction(DeployPayload $deployPayload, Request $request)
     {
         $this->denyAccessUnlessGranted(User::ROLE_DEPLOY);
-
+        dd($deployPayload);
 //        dd($this->getUser());
 
         $branch = basename($githubPayload['ref']);
