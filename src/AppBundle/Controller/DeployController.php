@@ -25,14 +25,13 @@ class DeployController extends Controller implements SecureControllerInterface
     public function postAction(DeployPayload $deployPayload, Request $request)
     {
 
-        dd($deployPayload);
+//        dd($deployPayload);
 //        dd($this->getUser());
 
-        $branch = basename($githubPayload['ref']);
         $response = 'controller ';
 //        dd($request, $githubPayload);
-        if ('pre' == $branch) {
-            $response .= 'push ' . $branch . ' ';
+        if ('pre' == $deployPayload->getBranch()) {
+            $response .= 'push ' . $deployPayload->getBranch() . ' ';
             $response .= date('d/m/y H:i:s') . ' ';
 //            return new Response($response);
 
