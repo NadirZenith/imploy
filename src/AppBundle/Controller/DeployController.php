@@ -23,6 +23,8 @@ class DeployController extends Controller implements SecureControllerInterface
     public function postAction(DeployPayload $deployPayload, Request $request)
     {
         $this->denyAccessUnlessGranted(User::ROLE_DEPLOY);
+
+        return new Response('ok controller');
         dd($deployPayload);
 //        dd($this->getUser());
 

@@ -134,6 +134,6 @@ class AppUserController extends Controller
 
     private function log($msg, $context)
     {
-        $this->get('monolog.logger.user_actions')->info(sprintf("AppUserController: %s", $msg), $context);
+        $this->get('logger')->info(sprintf("AppUserController: %s", $msg), $context);
     }
 }
