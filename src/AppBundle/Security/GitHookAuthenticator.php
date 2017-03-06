@@ -10,9 +10,12 @@ use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 
 class GitHookAuthenticator extends AbstractGuardAuthenticator
 {
+
+    protected $payload = null;
 
     /**
      * Returns a response that directs the user to authenticate.
@@ -69,30 +72,24 @@ class GitHookAuthenticator extends AbstractGuardAuthenticator
     {
         switch ($request->headers->get('content-type')) {
             case 'application/json':
-//                $content_raw = $request->getContent();
-                $content = json_decode($request->getContent(), true);
+                $this->payload = json_decode($request->getContent(), true);
                 break;
 
             case 'application/x-www-form-urlencoded':
-//                $content_raw = $request->request->get('payload');
-                $content = json_decode($request->request->get('payload'), true);
+                $this->payload = json_decode($request->request->get('payload'), true);
                 break;
 
             default:
                 throw new \Exception(sprintf("Unsupported content type: %s", $request->headers->get('content-type')));
         }
 
-        if (!$content) {
-            return;
+        if (!$this->payload) {
+            return null;
         }
 
-//        $content = json_decode($content_raw, true);
         return array(
-            'github_username' => isset($content['sender']['login']) ? $content['sender']['login'] : false,
+            'github_username' => isset($this->payload['sender']['login']) ? $this->payload['sender']['login'] : false,
             'signature'       => $request->headers->get('x-hub-signature'),
-            'payload'         => $content,
-//            'payload_raw'     => $content_raw,
-            'event'           => $request->headers->get('x-github-event')
         );
 
     }
@@ -138,21 +135,20 @@ class GitHookAuthenticator extends AbstractGuardAuthenticator
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        list($username, $signature, $payload, $event) = array_values($credentials);
 
         $pipeline = $user->getPipeline();
 
-        $repository = isset($payload['repository']['url']) ? $payload['repository']['url'] : false;
+        $repository = isset($this->payload['repository']['url']) ? $this->payload['repository']['url'] : false;
         if (!$pipeline || !$repository) {
             return false;
         }
 
-        list($algo, $hash) = explode('=', $signature) + array('', '');
+        list($algo, $hash) = explode('=', $credentials['signature']) + array('', '');
         if (!in_array($algo, hash_algos(), TRUE)) {
-            throw new \Exception("Hash algorithm '$algo' is not supported.");
+            throw new \Exception(sprintf("Hash algorithm '%s' is not supported.", $algo));
         }
 
-        if ($hash !== hash_hmac($algo, json_encode($payload, JSON_UNESCAPED_SLASHES), $pipeline->getSecurityToken())) {
+        if ($hash !== hash_hmac($algo, json_encode($this->payload, JSON_UNESCAPED_SLASHES), $pipeline->getSecurityToken())) {
             throw new AuthenticationException('Hook secret does not match.');
         }
 
@@ -196,6 +192,7 @@ class GitHookAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        $request->attributes->set('github_payload', $this->payload);
     }
 
     /**
@@ -213,5 +210,6 @@ class GitHookAuthenticator extends AbstractGuardAuthenticator
      */
     public function supportsRememberMe()
     {
+        return false;
     }
 }

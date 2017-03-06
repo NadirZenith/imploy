@@ -11,11 +11,20 @@ namespace AppBundle\Model;
 
 class DeployPayload
 {
+    protected $branch;
 
     public function __construct()
     {
     }
 
-
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
+        return $this;
+    }
+    public function getBranch()
+    {
+        return $this->branch;
+    }
 
 }

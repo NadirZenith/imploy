@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class DeployController extends Controller implements SecureControllerInterface
 {
@@ -19,25 +20,23 @@ class DeployController extends Controller implements SecureControllerInterface
     /**
      * @Route("/payload")
      * @Method("POST")
+     * @Security("has_role('ROLE_DEPLOY')")
      */
     public function postAction(DeployPayload $deployPayload, Request $request)
     {
-        $this->denyAccessUnlessGranted(User::ROLE_DEPLOY);
 
-        return new Response('ok controller');
         dd($deployPayload);
 //        dd($this->getUser());
 
         $branch = basename($githubPayload['ref']);
-        $response = '';
+        $response = 'controller ';
 //        dd($request, $githubPayload);
         if ('pre' == $branch) {
             $response .= 'push ' . $branch . ' ';
-            $response .= date('d/m/y H:i:s');
-            return new Response($response);
+            $response .= date('d/m/y H:i:s') . ' ';
+//            return new Response($response);
 
-
-            $this->log(array($request->headers->all(), $githubPayload));
+//            $this->log(array($request->headers->all(), $githubPayload));
 
             exec('cd /srv/nzlab.es/pre && /usr/bin/git pull origin pre 2>&1', $output);
             $this->log("goto pre and do git pull");
@@ -49,30 +48,7 @@ class DeployController extends Controller implements SecureControllerInterface
 
         }
 
-
-//        d($this->isGranted('ROLE_SUPER_ADMIN'), $this->getUser());
-
-//        switch ($request->headers->get('content-type')) {
-//            case 'application/json':
-//                $json = $request->getContent();
-//                break;
-//
-//            case 'application/x-www-form-urlencoded':
-//                $json = $request->request->get('payload');
-//            default:
-//                throw new \Exception(sprintf("Unsupported content type: '%s'", $request->headers->get('content-type')));
-//                break;
-//        }
-
-
-//        $this->log(array(
-//            $request->headers->get('content-type'),
-//            $request->headers->get('x-github-event'),
-//            $request->headers->get('x-hub-signature'),
-//            $request->getContent()
-//        ));
-
-        return new Response('ok nothing');
+        return new Response($response);
     }
 
     /**

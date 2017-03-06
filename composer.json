@@ -65,5 +65,9 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": null
+    },
+    "config": {
+        "bin-dir": "bin",
+        "preferred-install": "dist"
     }
 }
